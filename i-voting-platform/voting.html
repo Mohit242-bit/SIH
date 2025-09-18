@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i-Voting Platform - Cast Your Vote</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="voting-page">
+        <header class="voting-header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-vote-yea"></i>
+                    <h1>i-Voting Platform</h1>
+                </div>
+                <div class="user-info">
+                    <span id="voterName">Welcome, Voter</span>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <div class="voting-container">
+            <div class="voting-info">
+                <div class="election-details">
+                    <h2>General Election 2025</h2>
+                    <p class="election-date">Election Date: September 18, 2025</p>
+                    <div class="timer">
+                        <i class="fas fa-clock"></i>
+                        <span id="countdown">Voting ends in: 23:45:30</span>
+                    </div>
+                </div>
+                
+                <div class="voting-instructions">
+                    <h3><i class="fas fa-info-circle"></i> Voting Instructions</h3>
+                    <ol>
+                        <li>Review all candidates carefully</li>
+                        <li>Select your preferred candidate</li>
+                        <li>Confirm your vote selection</li>
+                        <li>Download your vote receipt</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="ballot-container">
+                <div class="ballot-header">
+                    <h2><i class="fas fa-ballot-check"></i> Official Ballot</h2>
+                    <p>Select one candidate for President</p>
+                </div>
+                
+                <form id="votingForm" class="ballot-form">
+                    <div class="candidates-grid">
+                        <div class="candidate-card">
+                            <input type="radio" id="candidate1" name="vote" value="candidate1">
+                            <label for="candidate1" class="candidate-label">
+                                <div class="candidate-photo">
+                                    <img src="https://via.placeholder.com/150x150/4F46E5/white?text=C1" alt="Candidate 1">
+                                </div>
+                                <div class="candidate-info">
+                                    <h3>John Anderson</h3>
+                                    <p class="party">Democratic Party</p>
+                                    <p class="experience">Former Governor • 15 years experience</p>
+                                    <div class="candidate-platform">
+                                        <span class="platform-item">Healthcare Reform</span>
+                                        <span class="platform-item">Education</span>
+                                        <span class="platform-item">Climate Action</span>
+                                    </div>
+                                </div>
+                                <div class="vote-indicator">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Selected</span>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="candidate-card">
+                            <input type="radio" id="candidate2" name="vote" value="candidate2">
+                            <label for="candidate2" class="candidate-label">
+                                <div class="candidate-photo">
+                                    <img src="https://via.placeholder.com/150x150/DC2626/white?text=C2" alt="Candidate 2">
+                                </div>
+                                <div class="candidate-info">
+                                    <h3>Sarah Mitchell</h3>
+                                    <p class="party">Republican Party</p>
+                                    <p class="experience">Business Leader • Former Senator</p>
+                                    <div class="candidate-platform">
+                                        <span class="platform-item">Economic Growth</span>
+                                        <span class="platform-item">Tax Reform</span>
+                                        <span class="platform-item">Infrastructure</span>
+                                    </div>
+                                </div>
+                                <div class="vote-indicator">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Selected</span>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="candidate-card">
+                            <input type="radio" id="candidate3" name="vote" value="candidate3">
+                            <label for="candidate3" class="candidate-label">
+                                <div class="candidate-photo">
+                                    <img src="https://via.placeholder.com/150x150/059669/white?text=C3" alt="Candidate 3">
+                                </div>
+                                <div class="candidate-info">
+                                    <h3>Michael Rodriguez</h3>
+                                    <p class="party">Independent</p>
+                                    <p class="experience">Tech Entrepreneur • City Mayor</p>
+                                    <div class="candidate-platform">
+                                        <span class="platform-item">Innovation</span>
+                                        <span class="platform-item">Digital Rights</span>
+                                        <span class="platform-item">Youth Employment</span>
+                                    </div>
+                                </div>
+                                <div class="vote-indicator">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Selected</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="voting-actions">
+                        <div class="vote-summary" id="voteSummary" style="display: none;">
+                            <div class="summary-content">
+                                <h3><i class="fas fa-clipboard-check"></i> Vote Summary</h3>
+                                <p>You have selected: <strong id="selectedCandidate"></strong></p>
+                                <p class="warning"><i class="fas fa-exclamation-triangle"></i> Once cast, your vote cannot be changed!</p>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button type="button" id="reviewVote" class="btn-secondary" disabled>
+                                <i class="fas fa-eye"></i>
+                                Review Vote
+                            </button>
+                            <button type="submit" id="castVote" class="btn-primary" disabled>
+                                <i class="fas fa-vote-yea"></i>
+                                Cast Vote
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="security-footer">
+            <div class="security-indicators">
+                <div class="security-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>SSL Encrypted</span>
+                </div>
+                <div class="security-item">
+                    <i class="fas fa-lock"></i>
+                    <span>Vote ID: #VT-2025-<span id="voteId">XXXX</span></span>
+                </div>
+                <div class="security-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Session: <span id="sessionTime">Active</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Vote Confirmation Modal -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-check-circle"></i> Confirm Your Vote</h2>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to cast your vote for:</p>
+                <div class="final-selection">
+                    <strong id="finalCandidate"></strong>
+                </div>
+                <p class="modal-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    This action is irreversible. Your vote will be permanently recorded.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" onclick="closeConfirmationModal()">
+                    <i class="fas fa-arrow-left"></i>
+                    Go Back
+                </button>
+                <button type="button" class="btn-primary" onclick="confirmVote()">
+                    <i class="fas fa-check"></i>
+                    Confirm & Cast Vote
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/voting.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

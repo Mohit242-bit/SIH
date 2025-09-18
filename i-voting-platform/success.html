@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote Cast Successfully - i-Voting Platform</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="success-page">
+        <div class="success-container">
+            <div class="success-animation">
+                <div class="checkmark-circle">
+                    <i class="fas fa-check"></i>
+                </div>
+            </div>
+            
+            <div class="success-content">
+                <h1>Vote Cast Successfully!</h1>
+                <p class="success-message">
+                    Thank you for participating in democracy. Your vote has been securely recorded and encrypted.
+                </p>
+                
+                <div class="vote-details">
+                    <div class="detail-item">
+                        <i class="fas fa-user"></i>
+                        <span class="label">Voter:</span>
+                        <span class="value" id="voterName">John Doe</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-calendar"></i>
+                        <span class="label">Date & Time:</span>
+                        <span class="value" id="voteDateTime">September 18, 2025 - 6:37 PM</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-vote-yea"></i>
+                        <span class="label">Selected Candidate:</span>
+                        <span class="value" id="selectedCandidate">Candidate Name</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-fingerprint"></i>
+                        <span class="label">Vote ID:</span>
+                        <span class="value" id="voteId">VT-2025-ABCD1234</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span class="label">Verification Hash:</span>
+                        <span class="value hash" id="verificationHash">a1b2c3d4e5f6g7h8i9j0</span>
+                    </div>
+                </div>
+                
+                <div class="receipt-section">
+                    <h3><i class="fas fa-receipt"></i> Vote Receipt</h3>
+                    <p>Download your official vote receipt for your records. This receipt serves as proof of your participation.</p>
+                    
+                    <div class="receipt-actions">
+                        <button class="btn-primary" onclick="downloadReceipt()">
+                            <i class="fas fa-download"></i>
+                            Download Receipt (PDF)
+                        </button>
+                        <button class="btn-secondary" onclick="printReceipt()">
+                            <i class="fas fa-print"></i>
+                            Print Receipt
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="next-steps">
+                    <h3><i class="fas fa-info-circle"></i> What Happens Next?</h3>
+                    <div class="steps-grid">
+                        <div class="step">
+                            <i class="fas fa-database"></i>
+                            <h4>Secure Storage</h4>
+                            <p>Your vote is encrypted and stored in our secure blockchain database</p>
+                        </div>
+                        <div class="step">
+                            <i class="fas fa-chart-bar"></i>
+                            <h4>Real-time Counting</h4>
+                            <p>Results are tallied in real-time with transparent verification</p>
+                        </div>
+                        <div class="step">
+                            <i class="fas fa-bell"></i>
+                            <h4>Result Notification</h4>
+                            <p>You'll receive election results via email when voting closes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn-outline" onclick="viewResults()">
+                        <i class="fas fa-chart-pie"></i>
+                        View Live Results
+                    </button>
+                    <button class="btn-primary" onclick="goHome()">
+                        <i class="fas fa-home"></i>
+                        Return Home
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Receipt Preview Modal -->
+        <div id="receiptModal" class="modal">
+            <div class="modal-content receipt-modal">
+                <div class="modal-header">
+                    <h3><i class="fas fa-receipt"></i> Vote Receipt Preview</h3>
+                    <button class="close-btn" onclick="closeReceiptModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="receiptContent" class="receipt-content">
+                        <!-- Receipt content will be dynamically generated -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="security-footer">
+            <div class="security-note">
+                <i class="fas fa-shield-alt"></i>
+                <p>Your vote is protected by military-grade encryption and blockchain technology</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/success.js"></script>
+    <script src="js/receipt.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
