@@ -607,10 +607,14 @@ body {
     border-radius: 20px;
     padding: 40px;
     max-width: 600px;
+    max-height: 80vh; /* Limit height to 80% of viewport */
     width: 90%;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
     animation: modalSlideUp 0.3s ease;
     position: relative;
+    overflow: hidden; /* Prevent content overflow */
+    display: flex;
+    flex-direction: column;
 }
 
 @keyframes modalSlideUp {
@@ -677,25 +681,52 @@ body {
 
 .integrity-check {
     border-top: 5px solid #28a745;
+    max-height: 80vh; /* Limit modal height */
+}
+
+.integrity-check h2 {
+    color: #28a745;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.8em;
+    flex-shrink: 0; /* Don't shrink the header */
+}
+
+.verification-progress {
+    flex: 1;
+    overflow-y: auto; /* Enable scrolling for content */
+    margin: 20px 0;
+    max-height: 400px; /* Limit content height */
 }
 
 .verification-step {
     display: flex;
     align-items: center;
     gap: 15px;
-    margin: 15px 0;
-    padding: 15px;
+    margin: 10px 0;
+    padding: 12px 15px;
     background: #f8f9fa;
     border-radius: 8px;
     transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.verification-step.completed {
+    background: #d4edda;
+    border-left-color: #28a745;
+    color: #155724;
 }
 
 .step-icon {
     font-size: 1.2em;
+    min-width: 20px; /* Ensure consistent icon width */
 }
 
 .verification-results {
-    margin-top: 20px;
+    flex: 1;
+    overflow-y: auto; /* Enable scrolling */
+    max-height: 350px; /* Limit height */
+    padding: 10px 0;
 }
 
 .modal-btn {
@@ -712,6 +743,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-top: 20px;
+    flex-shrink: 0; /* Don't shrink the button */
 }
 
 .modal-btn:hover {

@@ -427,8 +427,19 @@ class BlockchainDashboard {
         const modal = document.getElementById('integrity-modal');
         const resultsContainer = document.getElementById('verification-results');
         
+        // Set modal styles for proper sizing and scrolling
         modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        
+        // Set container styles for scrolling
+        resultsContainer.style.maxHeight = '400px';
+        resultsContainer.style.overflowY = 'auto';
+        resultsContainer.style.padding = '10px';
         resultsContainer.innerHTML = '';
+        
+        // Hide close button initially
+        document.getElementById('integrity-close-btn').style.display = 'none';
         
         // Simulate verification process
         const checks = [
@@ -445,43 +456,60 @@ class BlockchainDashboard {
             if (currentCheck < checks.length) {
                 const checkDiv = document.createElement('div');
                 checkDiv.className = 'verification-step';
+                checkDiv.style.cssText = `
+                    padding: 10px;
+                    margin: 8px 0;
+                    border-radius: 6px;
+                    background: #fff3cd;
+                    border: 1px solid #ffeaa7;
+                    transition: all 0.3s ease;
+                `;
                 checkDiv.innerHTML = `
                     <span class="step-icon">⏳</span>
                     <span>${checks[currentCheck]}</span>
                 `;
                 resultsContainer.appendChild(checkDiv);
                 
-                // Complete the check after 1 second
+                // Complete the check after 1 second and turn it green
                 setTimeout(() => {
                     checkDiv.innerHTML = `
                         <span class="step-icon">✅</span>
                         <span>${checks[currentCheck].replace('...', ' - PASSED')}</span>
                     `;
                     checkDiv.style.background = '#d4edda';
-                }, 1000);
+                    checkDiv.style.borderColor = '#28a745';
+                    checkDiv.style.color = '#155724';
+                }, 800);
                 
                 currentCheck++;
             } else {
                 clearInterval(verificationInterval);
                 
-                // Show final results
+                // Show final results after all checks are complete
                 setTimeout(() => {
                     const finalResult = document.createElement('div');
+                    finalResult.style.cssText = `
+                        background: #d4edda;
+                        padding: 20px;
+                        border-radius: 10px;
+                        margin-top: 15px;
+                        border: 2px solid #28a745;
+                        text-align: center;
+                    `;
                     finalResult.innerHTML = `
-                        <div style="background: #d4edda; padding: 20px; border-radius: 10px; margin-top: 15px; border: 2px solid #28a745;">
-                            <h4 style="color: #155724; margin-bottom: 10px;">🛡️ INTEGRITY VERIFICATION COMPLETE</h4>
-                            <p style="color: #155724; margin: 5px 0;"><strong>Status:</strong> ALL CHECKS PASSED</p>
-                            <p style="color: #155724; margin: 5px 0;"><strong>Total Votes Verified:</strong> ${this.getTotalVotes().toLocaleString()}</p>
-                            <p style="color: #155724; margin: 5px 0;"><strong>Blockchain Consensus:</strong> 6/6 nodes agree</p>
-                            <p style="color: #155724; margin: 5px 0;"><strong>Security Level:</strong> MAXIMUM</p>
-                        </div>
+                        <h4 style="color: #155724; margin-bottom: 15px;">🛡️ INTEGRITY VERIFICATION COMPLETE</h4>
+                        <p style="color: #155724; margin: 8px 0;"><strong>Status:</strong> ✅ ALL CHECKS PASSED</p>
+                        <p style="color: #155724; margin: 8px 0;"><strong>Total Votes Verified:</strong> ${this.getTotalVotes().toLocaleString()}</p>
+                        <p style="color: #155724; margin: 8px 0;"><strong>Blockchain Consensus:</strong> 6/6 nodes agree</p>
+                        <p style="color: #155724; margin: 8px 0;"><strong>Security Level:</strong> 🔒 MAXIMUM</p>
                     `;
                     resultsContainer.appendChild(finalResult);
                     
+                    // Show close button
                     document.getElementById('integrity-close-btn').style.display = 'block';
-                }, 1500);
+                }, 1000);
             }
-        }, 1500);
+        }, 1200); // Faster interval for better UX
     }
     
     toggleAutoRefresh() {
