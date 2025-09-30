@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Election Results - Live Dashboard</title>
+    <link rel="stylesheet" href="css/results.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>⛓️ Blockchain Election Results Dashboard</h1>
+            <h2>🗳️ Live Tamper-Proof Vote Tracking</h2>
+            <div class="network-status">
+                <span class="status-dot blockchain-active"></span>
+                <span>Blockchain Network: ACTIVE</span>
+                <div class="sync-indicator">
+                    <span id="sync-status">🔄 Syncing...</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-dashboard">
+            <!-- Real-time Stats Grid -->
+            <section class="stats-grid">
+                <div class="stat-card total-votes-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <h3>Total Votes</h3>
+                        <h2 id="total-votes">0</h2>
+                        <p>Across all EVMs</p>
+                        <div class="stat-trend">
+                            <span class="trend-indicator">↗️ +<span id="vote-trend">0</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card evms-card">
+                    <div class="stat-icon">🗳️</div>
+                    <div class="stat-content">
+                        <h3>EVMs Processed</h3>
+                        <h2 id="evms-processed">0/120</h2>
+                        <p>Machines submitted</p>
+                        <div class="progress-mini">
+                            <div class="progress-mini-fill" id="evm-progress"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card blockchain-card">
+                    <div class="stat-icon">⛓️</div>
+                    <div class="stat-content">
+                        <h3>Blockchain Blocks</h3>
+                        <h2 id="blocks">18,847,392</h2>
+                        <p>Current block height</p>
+                        <div class="block-time">
+                            <span>⏱️ 12s ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card security-card">
+                    <div class="stat-icon">🔒</div>
+                    <div class="stat-content">
+                        <h3>Security Status</h3>
+                        <h2>SECURE</h2>
+                        <p>0 tampering attempts</p>
+                        <div class="security-level">
+                            <span class="security-high">🛡️ HIGH</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live Results Section -->
+            <section class="results-section">
+                <div class="results-header">
+                    <h2>🏆 Live Election Results</h2>
+                    <div class="results-controls">
+                        <button onclick="toggleAutoRefresh()" id="auto-refresh-btn" class="control-btn">
+                            🔄 Auto-Refresh: ON
+                        </button>
+                        <button onclick="downloadResults()" class="control-btn">
+                            📊 Export Results
+                        </button>
+                        <button onclick="verifyIntegrity()" class="control-btn security-btn">
+                            🔍 Verify Integrity
+                        </button>
+                    </div>
+                </div>
+
+                <div class="candidates-results">
+                    <div class="candidate-result bjp-result">
+                        <div class="candidate-info">
+                            <div class="candidate-avatar">🔵</div>
+                            <div class="candidate-details">
+                                <h3>CANDIDATE A</h3>
+                                <p class="party-name">Bharatiya Janata Party (BJP)</p>
+                                <span class="vote-count" id="votes-A-display">0 votes</span>
+                            </div>
+                        </div>
+                        <div class="result-visualization">
+                            <div class="progress-section">
+                                <div class="progress-bar large">
+                                    <div class="progress-fill bjp-color" id="progress-A" style="width: 0%">
+                                        <span class="progress-text" id="percent-A">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blockchain-hash" id="hash-A">
+                                Hash: 0x...loading
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="candidate-result congress-result">
+                        <div class="candidate-info">
+                            <div class="candidate-avatar">🔴</div>
+                            <div class="candidate-details">
+                                <h3>CANDIDATE B</h3>
+                                <p class="party-name">Indian National Congress (INC)</p>
+                                <span class="vote-count" id="votes-B-display">0 votes</span>
+                            </div>
+                        </div>
+                        <div class="result-visualization">
+                            <div class="progress-section">
+                                <div class="progress-bar large">
+                                    <div class="progress-fill congress-color" id="progress-B" style="width: 0%">
+                                        <span class="progress-text" id="percent-B">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blockchain-hash" id="hash-B">
+                                Hash: 0x...loading
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="candidate-result aap-result">
+                        <div class="candidate-info">
+                            <div class="candidate-avatar">🟡</div>
+                            <div class="candidate-details">
+                                <h3>CANDIDATE C</h3>
+                                <p class="party-name">Aam Aadmi Party (AAP)</p>
+                                <span class="vote-count" id="votes-C-display">0 votes</span>
+                            </div>
+                        </div>
+                        <div class="result-visualization">
+                            <div class="progress-section">
+                                <div class="progress-bar large">
+                                    <div class="progress-fill aap-color" id="progress-C" style="width: 0%">
+                                        <span class="progress-text" id="percent-C">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blockchain-hash" id="hash-C">
+                                Hash: 0x...loading
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="candidate-result nota-result">
+                        <div class="candidate-info">
+                            <div class="candidate-avatar">⚫</div>
+                            <div class="candidate-details">
+                                <h3>NOTA</h3>
+                                <p class="party-name">None of the Above</p>
+                                <span class="vote-count" id="votes-NOTA-display">0 votes</span>
+                            </div>
+                        </div>
+                        <div class="result-visualization">
+                            <div class="progress-section">
+                                <div class="progress-bar large">
+                                    <div class="progress-fill nota-color" id="progress-NOTA" style="width: 0%">
+                                        <span class="progress-text" id="percent-NOTA">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="blockchain-hash" id="hash-NOTA">
+                                Hash: 0x...loading
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Blockchain Status & Anti-Tampering Section -->
+            <section class="blockchain-section">
+                <div class="blockchain-grid">
+                    <div class="blockchain-info">
+                        <h3>🔗 Blockchain Network Status</h3>
+                        <div class="network-details">
+                            <div class="detail-item">
+                                <strong>Network:</strong> <span class="network-name">Ethereum Sepolia Testnet</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Smart Contract:</strong> 
+                                <code class="contract-address">0x1234...VotingContract</code>
+                                <button onclick="copyContract()" class="copy-btn-small">📋</button>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Gas Price:</strong> <span id="gas-price">25 gwei</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Confirmations Required:</strong> <span>6 blocks</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="anti-tamper-panel">
+                        <h3>🛡️ Anti-Tampering Verification</h3>
+                        <div class="tamper-checks">
+                            <div class="check-item verified">
+                                <span class="check-icon">✅</span>
+                                <span>Cryptographic signatures valid</span>
+                            </div>
+                            <div class="check-item verified">
+                                <span class="check-icon">✅</span>
+                                <span>Hash chain integrity verified</span>
+                            </div>
+                            <div class="check-item verified">
+                                <span class="check-icon">✅</span>
+                                <span>No duplicate votes detected</span>
+                            </div>
+                            <div class="check-item verified">
+                                <span class="check-icon">✅</span>
+                                <span>Timestamp validation passed</span>
+                            </div>
+                        </div>
+                        <button onclick="demonstrateTampering()" class="tamper-demo-btn">
+                            🚨 Simulate Tampering Attack
+                        </button>
+                        <div class="manual-tamper" style="margin-top:12px; display:flex; gap:8px; align-items:center;">
+                            <label for="tamper-candidate" style="font-size:13px;">Manual Tamper:</label>
+                            <select id="tamper-candidate" style="padding:6px;border-radius:6px;border:1px solid #ccc;">
+                                <option value="A">Candidate A</option>
+                                <option value="B">Candidate B</option>
+                                <option value="C">Candidate C</option>
+                                <option value="NOTA">NOTA</option>
+                            </select>
+                            <input id="tamper-amount" type="number" placeholder="amount" style="width:80px;padding:6px;border-radius:6px;border:1px solid #ccc;" />
+                            <button onclick="manualTamperFromUI()" class="tamper-demo-btn" style="background:linear-gradient(135deg,#e74c3c,#c0392b);">⚠️ Manual Tamper</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Transactions -->
+            <section class="transactions-section">
+                <h3>📋 Recent Blockchain Transactions</h3>
+                <div class="transactions-container">
+                    <div class="transaction-header">
+                        <span>Block #</span>
+                        <span>EVM ID</span>
+                        <span>Votes</span>
+                        <span>Hash</span>
+                        <span>Status</span>
+                        <span>Time</span>
+                    </div>
+                    <div id="transactions-list" class="transactions-list">
+                        <!-- Transactions will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Tampering Detection Modal -->
+        <div id="tamper-modal" class="modal" style="display: none;">
+            <div class="modal-content tamper-alert">
+                <h2>🚨 TAMPERING ATTEMPT DETECTED!</h2>
+                <div class="tamper-details">
+                    <p><strong>Alert Type:</strong> <span class="alert-critical">CRITICAL SECURITY BREACH</span></p>
+                    <p><strong>Detection Time:</strong> <span id="tamper-time"></span></p>
+                    <p><strong>Affected Data:</strong> Vote count manipulation attempt</p>
+                    <p><strong>Action Taken:</strong> Transaction rejected by blockchain consensus</p>
+                    
+                    <div class="tamper-evidence">
+                        <h4>📊 Evidence:</h4>
+                        <div class="evidence-item">
+                            <span>❌ Invalid hash signature detected</span>
+                        </div>
+                        <div class="evidence-item">
+                            <span>❌ Blockchain consensus failed (0/6 confirmations)</span>
+                        </div>
+                        <div class="evidence-item">
+                            <span>✅ Original data preserved and restored</span>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="closeTamperModal()" class="modal-btn">
+                    ✅ ACKNOWLEDGED - SECURITY MAINTAINED
+                </button>
+            </div>
+        </div>
+
+        <!-- Integrity Verification Modal -->
+        <div id="integrity-modal" class="modal" style="display: none;">
+            <div class="modal-content integrity-check">
+                <h2>🔍 Blockchain Integrity Verification</h2>
+                <div class="verification-progress">
+                    <div class="verification-step">
+                        <span class="step-icon">⏳</span>
+                        <span>Checking cryptographic signatures...</span>
+                    </div>
+                    <div class="verification-results" id="verification-results">
+                        <!-- Results populated by JavaScript -->
+                    </div>
+                </div>
+                <button onclick="closeIntegrityModal()" class="modal-btn" id="integrity-close-btn" style="display: none;">
+                    Close Verification Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="dashboard-footer">
+        <div class="footer-content">
+            <p>🔒 Secured by Blockchain Technology | Real-time Tamper Detection | Election Commission of India</p>
+            <div class="footer-stats">
+                <span>Last Updated: <span id="last-update">--:--:--</span></span>
+                <span>•</span>
+                <span>Uptime: <span id="uptime">00:00:00</span></span>
+                <span>•</span>
+                <span>Network Latency: <span id="latency">12ms</span></span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/results.js"></script>
+</body>
+</html>

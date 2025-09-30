@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVM Simulator - Blockchain E-Voting System</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <header class="evm-header">
+            <h1>🗳️ Electronic Voting Machine - EVM001</h1>
+            <h3>📍 Location: Central Mumbai Polling Station</h3>
+            <div class="security-indicator">
+                <span class="status-dot active"></span>
+                <span>Secure Connection Active</span>
+            </div>
+        </header>
+
+        <div class="evm-container">
+            <div id="voting-section" class="voting-panel">
+                <h2>🔐 Select Your Candidate:</h2>
+                <p class="instructions">Touch the button next to your preferred candidate</p>
+                
+                <div class="candidates-grid">
+                    <button class="candidate-button" id="candidate-A" onclick="castVote('A')" data-party="BJP">
+                        <div class="candidate-info">
+                            <span class="candidate-symbol">🔵</span>
+                            <div class="candidate-details">
+                                <h3>CANDIDATE A</h3>
+                                <p class="party-name">Bharatiya Janata Party (BJP)</p>
+                            </div>
+                        </div>
+                        <div class="vote-count" id="votes-A">0</div>
+                    </button>
+                    
+                    <button class="candidate-button" id="candidate-B" onclick="castVote('B')" data-party="INC">
+                        <div class="candidate-info">
+                            <span class="candidate-symbol">🔴</span>
+                            <div class="candidate-details">
+                                <h3>CANDIDATE B</h3>
+                                <p class="party-name">Indian National Congress (INC)</p>
+                            </div>
+                        </div>
+                        <div class="vote-count" id="votes-B">0</div>
+                    </button>
+                    
+                    <button class="candidate-button" id="candidate-C" onclick="castVote('C')" data-party="AAP">
+                        <div class="candidate-info">
+                            <span class="candidate-symbol">🟡</span>
+                            <div class="candidate-details">
+                                <h3>CANDIDATE C</h3>
+                                <p class="party-name">Aam Aadmi Party (AAP)</p>
+                            </div>
+                        </div>
+                        <div class="vote-count" id="votes-C">0</div>
+                    </button>
+
+                    <button class="candidate-button nota-button" id="candidate-NOTA" onclick="castVote('NOTA')" data-party="NOTA">
+                        <div class="candidate-info">
+                            <span class="candidate-symbol">⚫</span>
+                            <div class="candidate-details">
+                                <h3>NOTA</h3>
+                                <p class="party-name">None of the Above</p>
+                            </div>
+                        </div>
+                        <div class="vote-count" id="votes-NOTA">0</div>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="status-panel">
+                <h3>📊 Machine Status:</h3>
+                <div class="status-grid">
+                    <div class="status-item">
+                        <span class="status-label">Total Votes Cast:</span>
+                        <span class="status-value" id="total-votes">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Voting Started:</span>
+                        <span class="status-value">8:00 AM</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Current Time:</span>
+                        <span class="status-value" id="current-time"></span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Machine ID:</span>
+                        <span class="status-value">EVM-001-MH-MUM</span>
+                    </div>
+                    <div class="status-item full-width">
+                        <span class="status-label">Status:</span>
+                        <span class="status-value" id="status">🟢 VOTING IN PROGRESS</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="control-panel">
+                <button onclick="sealVoting()" id="seal-button" class="control-btn seal-btn">
+                    🔒 END VOTING & SEAL MACHINE
+                </button>
+                <button onclick="exportData()" id="export-button" class="control-btn export-btn" disabled>
+                    📤 EXPORT TO BLOCKCHAIN
+                </button>
+            </div>
+            
+            <div id="export-section" class="export-panel" style="display: none;">
+                <h4>🔐 Secure Data Export:</h4>
+                <div class="export-details">
+                    <div class="hash-section">
+                        <label>Cryptographic Hash:</label>
+                        <code id="data-hash" class="hash-display">Generating...</code>
+                        <button onclick="copyHash()" class="copy-btn" id="copy-hash-btn">📋</button>
+                    </div>
+                    
+                    <div class="qr-section">
+                        <p>QR Code for Secure Transfer:</p>
+                        <div id="qr-placeholder" class="qr-code">
+                            <div class="qr-pattern">
+                                <div class="qr-corner"></div>
+                                <div class="qr-corner"></div>
+                                <div class="qr-corner"></div>
+                                <div class="qr-corner"></div>
+                                <span>QR CODE</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="verification-section">
+                        <h5>🔍 Data Verification:</h5>
+                        <div class="verification-item">
+                            <span>✅ Cryptographic Signature Valid</span>
+                        </div>
+                        <div class="verification-item">
+                            <span>✅ Vote Count Integrity Verified</span>
+                        </div>
+                        <div class="verification-item">
+                            <span>✅ Timestamp Authentication Complete</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="transferToBlockchain()" class="control-btn blockchain-btn" id="blockchain-transfer-btn">
+                    🚀 SUBMIT TO BLOCKCHAIN NETWORK
+                </button>
+            </div>
+        </div>
+
+        <div id="vote-confirmation" class="vote-popup" style="display: none;">
+            <div class="popup-content">
+                <h3>✅ Vote Recorded</h3>
+                <p id="vote-message"></p>
+                <button onclick="closeVoteConfirmation()" class="popup-btn">OK</button>
+            </div>
+        </div>
+
+        <div id="blockchain-success" class="blockchain-popup" style="display: none;">
+            <div class="popup-content success-popup">
+                <h3>🎉 Blockchain Submission Successful!</h3>
+                <div class="success-details">
+                    <p><strong>Transaction Hash:</strong> <code id="tx-hash"></code></p>
+                    <p><strong>Block Number:</strong> #<span id="block-number"></span></p>
+                    <p><strong>Confirmations:</strong> <span id="confirmations">6/6</span></p>
+                    <p><strong>Gas Used:</strong> <span id="gas-used"></span> ETH</p>
+                </div>
+                <button onclick="viewResults()" class="popup-btn view-results-btn">📊 View Live Results</button>
+                <button onclick="closeBlockchainSuccess()" class="popup-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Reset Button (small corner button) -->
+    <button id="admin-reset-btn" onclick="resetMachine()" class="admin-reset-button" title="Reset Machine (Admin Only)">
+        🔄
+    </button>
+
+    <footer class="evm-footer">
+        <p>🔒 Secured by Blockchain Technology | Election Commission of India | Version 2.1.0</p>
+    </footer>
+
+    <script src="js/evm-simulator.js"></script>
+</body>
+</html>
