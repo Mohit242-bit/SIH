@@ -5,7 +5,7 @@ class BlockchainDashboard {
         this.evmsProcessed = 0;
         this.totalEvms = 120;
         this.blockHeight = 18847392;
-        this.autoRefresh = true;
+        this.autoRefresh = false; // Default to OFF to prevent fake activity
         this.startTime = new Date();
         this.transactions = [];
         this.lastVoteUpdate = 0;
@@ -26,6 +26,9 @@ class BlockchainDashboard {
         this.blockchainHashes = {};
         this.cryptographicSeal = null;
         this.isDataSealed = false;
+        
+        // Immutable data protection
+        this.immutableVoteRecord = null;
         
         // Immutable data protection
         this.immutableVoteRecord = null;
