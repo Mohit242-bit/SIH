@@ -323,34 +323,65 @@ class BlockchainDashboard {
     showTamperAttempt(candidate, amount, originalData) {
         // Create temporary visual effect showing attempted change
         const element = document.getElementById(`votes-${candidate}-display`);
+        const progressElement = document.getElementById(`progress-${candidate}`);
+        
         if (element) {
             const originalText = element.textContent;
-            const attemptedValue = originalData[candidate] + amount;
+            const originalStyle = {
+                color: element.style.color,
+                background: element.style.background,
+                fontWeight: element.style.fontWeight
+            };
             
-            // Briefly flash the attempted tampering
-            element.style.color = '#dc3545';
+            // Show tampering attempt with red warning
+            element.style.color = '#ffffff';
+            element.style.background = '#dc3545';
             element.style.fontWeight = 'bold';
-            element.textContent = `${attemptedValue.toLocaleString()} votes (TAMPERING ATTEMPT)`;
+            element.style.padding = '8px';
+            element.style.borderRadius = '4px';
+            element.style.animation = 'blink 0.5s infinite';
+            element.textContent = `🚨 TAMPERING BLOCKED: Attempted +${amount} votes`;
             
-            // Restore original immediately
+            // Make progress bar flash red too
+            if (progressElement) {
+                progressElement.style.background = '#dc3545';
+                progressElement.style.animation = 'blink 0.5s infinite';
+            }
+            
+            // Restore original after showing the blocked attempt
             setTimeout(() => {
-                element.style.color = '';
-                element.style.fontWeight = '';
+                element.style.color = originalStyle.color;
+                element.style.background = originalStyle.background;
+                element.style.fontWeight = originalStyle.fontWeight;
+                element.style.padding = '';
+                element.style.borderRadius = '';
+                element.style.animation = '';
                 element.textContent = originalText;
-            }, 800);
+                
+                if (progressElement) {
+                    progressElement.style.background = '';
+                    progressElement.style.animation = '';
+                }
+            }, 2000);
         }
     }
 
     // Manual tamper - SECURE VERSION that never changes real data
     manualTamper(candidate, amount) {
-        if (!candidate || !amount || amount <= 0) return;
+        if (!candidate || !amount || amount <= 0) {
+            this.showAlert('⚠️ Invalid tampering parameters', 'error');
+            return;
+        }
 
-        console.log(`⚠️ Manual tamper blocked: attempted +${amount} to ${candidate}`);
+        console.log(`🚨 SECURITY ALERT: Manual tamper attempt blocked - tried to add ${amount} votes to ${candidate}`);
+        
+        // Show immediate blocking message
+        this.showAlert(`🚨 TAMPERING BLOCKED! Attempt to add ${amount} votes to Candidate ${candidate} has been prevented by blockchain security!`, 'error');
 
-        // NEVER modify real data - just show the attempt being blocked
+        // NEVER modify real data - just show the attempt being blocked visually
         this.showTamperAttempt(candidate, amount, this.currentResults);
         
-        // Immediately show that tampering was blocked
+        // Trigger security alert immediately
         setTimeout(() => {
             this.triggerTamperAlert();
             this.updateTamperChecks(false);
@@ -358,9 +389,9 @@ class BlockchainDashboard {
             // Show security restoration
             setTimeout(() => {
                 this.updateTamperChecks(true);
-                this.showAlert(`🛡️ Tampering attempt blocked! +${amount} votes to ${candidate} was prevented.`, 'success');
+                this.showAlert(`✅ Security restored - Original vote data preserved`, 'success');
             }, 2000);
-        }, 800);
+        }, 500);
     }
     
     validateDataIntegrity(originalData) {
@@ -685,6 +716,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 opacity: 0;
                 transform: translateX(100%);
             }
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
         }
     `;
     document.head.appendChild(style);
