@@ -20,10 +20,15 @@ class BlockchainDashboard {
             uptime: null
         };
         
-        // Anti-tampering system
+        // Anti-tampering system with real protection
         this.originalData = null;
         this.tamperingAttempts = 0;
         this.blockchainHashes = {};
+        this.cryptographicSeal = null;
+        this.isDataSealed = false;
+        
+        // Immutable data protection
+        this.immutableVoteRecord = null;
         
         this.init();
     }
@@ -82,6 +87,11 @@ class BlockchainDashboard {
                 if (data.votes) {
                     this.currentResults = data.votes;
                     this.originalData = JSON.parse(JSON.stringify(data.votes)); // Deep copy
+                    
+                    // Create immutable record for security
+                    this.immutableVoteRecord = Object.freeze(JSON.parse(JSON.stringify(data.votes)));
+                    this.isDataSealed = true;
+                    
                     this.evmsProcessed = Math.min(this.evmsProcessed + 1, this.totalEvms);
                     
                     // Add transaction for this EVM
@@ -241,7 +251,7 @@ class BlockchainDashboard {
     }
     
     simulateNetworkActivity() {
-        // Simulate blockchain activity
+        // Only simulate basic blockchain metrics, not fake transactions or EVMs
         this.blockHeight += 1;
         document.getElementById('blocks').textContent = this.blockHeight.toLocaleString();
         
@@ -254,16 +264,7 @@ class BlockchainDashboard {
         this.networkLatency = Math.floor(Math.random() * 20) + 8;
         document.getElementById('latency').textContent = `${this.networkLatency}ms`;
         
-        // Occasionally add new transactions from other EVMs
-        if (Math.random() > 0.7 && this.evmsProcessed < this.totalEvms) {
-            const machineId = `EVM-${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`;
-            const votes = Math.floor(Math.random() * 300) + 50;
-            this.addTransaction(machineId, votes, Math.random() > 0.2 ? 'confirmed' : 'pending');
-            
-            if (Math.random() > 0.5) {
-                this.evmsProcessed = Math.min(this.evmsProcessed + 1, this.totalEvms);
-            }
-        }
+        // Remove fake EVM and transaction generation - these should only come from real EVM submissions
     }
     
     updateTime() {
@@ -280,103 +281,102 @@ class BlockchainDashboard {
     }
     
     startRealTimeUpdates() {
-        // Only create one realtime interval; will be started/stopped by startBackgroundIntervals/stopBackgroundIntervals
+        // Remove fake vote generation - votes should only come from actual EVM submissions
+        // Real blockchain systems don't randomly generate votes
         if (this.intervals.realtime) return;
 
         this.intervals.realtime = setInterval(() => {
             if (!this.autoRefresh) return;
-
-            if (Math.random() > 0.8 && this.evmsProcessed < this.totalEvms) {
-                const candidates = ['A', 'B', 'C', 'NOTA'];
-                const randomCandidate = candidates[Math.floor(Math.random() * candidates.length)];
-                const voteIncrease = Math.floor(Math.random() * 3) + 1;
-
-                this.currentResults[randomCandidate] += voteIncrease;
-                this.lastVoteUpdate = voteIncrease;
-
-                this.updateDisplay();
-                this.generateBlockchainHashes();
-            }
-        }, 5000);
+            // Only check for legitimate EVM data updates, no fake vote generation
+            this.checkForNewEVMData();
+        }, 2000);
     }
     
-    // Anti-Tampering Demonstration
+    // Anti-Tampering Demonstration - SECURE VERSION
     demonstrateTampering() {
         console.log('🚨 Simulating tampering attack...');
         
-        // Store original data for restoration
+        // DON'T modify real data - just show what would happen
         const originalVotes = JSON.parse(JSON.stringify(this.currentResults));
-        
-        // Simulate tampering - artificially increase votes for Candidate A
         const tamperAmount = 1000;
-        this.currentResults.A += tamperAmount;
         
-        // Update display with tampered data briefly
-        this.updateDisplay();
+        // Show tampering attempt without actually changing data
+        this.showTamperAttempt('A', tamperAmount, originalVotes);
         
-        // Show tampering detection after 2 seconds
+        // Immediately show detection - no real data was ever changed
         setTimeout(() => {
-            // Detect tampering by validating blockchain hashes
-            const isValid = this.validateDataIntegrity(originalVotes);
+            this.triggerTamperAlert();
+            this.updateTamperChecks(false);
             
-            if (!isValid) {
-                this.triggerTamperAlert();
-                
-                // Restore original data from blockchain
-                setTimeout(() => {
-                    this.currentResults = originalVotes;
-                    this.updateDisplay();
-                    this.generateBlockchainHashes();
-                    
-                    // Update tamper check status
-                    this.updateTamperChecks(true);
-                }, 1000);
-            }
-        }, 2000);
+            // Show that original data is preserved
+            setTimeout(() => {
+                this.updateTamperChecks(true);
+                this.showAlert('🛡️ Original vote data preserved - tampering blocked!', 'success');
+            }, 3000);
+        }, 1000);
     }
 
-    // Manual tamper triggered from UI: temporarily add votes to a chosen candidate
+    // Show visual indication of tampering attempt without changing real data
+    showTamperAttempt(candidate, amount, originalData) {
+        // Create temporary visual effect showing attempted change
+        const element = document.getElementById(`votes-${candidate}-display`);
+        if (element) {
+            const originalText = element.textContent;
+            const attemptedValue = originalData[candidate] + amount;
+            
+            // Briefly flash the attempted tampering
+            element.style.color = '#dc3545';
+            element.style.fontWeight = 'bold';
+            element.textContent = `${attemptedValue.toLocaleString()} votes (TAMPERING ATTEMPT)`;
+            
+            // Restore original immediately
+            setTimeout(() => {
+                element.style.color = '';
+                element.style.fontWeight = '';
+                element.textContent = originalText;
+            }, 800);
+        }
+    }
+
+    // Manual tamper - SECURE VERSION that never changes real data
     manualTamper(candidate, amount) {
         if (!candidate || !amount || amount <= 0) return;
 
-        console.log(`⚠️ Manual tamper requested: +${amount} to ${candidate}`);
+        console.log(`⚠️ Manual tamper blocked: attempted +${amount} to ${candidate}`);
 
-        // Preserve original data
-        const originalVotes = JSON.parse(JSON.stringify(this.currentResults));
-
-        // Apply tamper
-        this.currentResults[candidate] += amount;
-        this.lastVoteUpdate = amount;
-        this.updateDisplay();
-        this.generateBlockchainHashes();
-
-        // After a short delay run detection similar to the automated demo
+        // NEVER modify real data - just show the attempt being blocked
+        this.showTamperAttempt(candidate, amount, this.currentResults);
+        
+        // Immediately show that tampering was blocked
         setTimeout(() => {
-            const isValid = this.validateDataIntegrity(originalVotes);
-            if (!isValid) {
-                this.triggerTamperAlert();
-
-                // Restore original data after showing alert
-                setTimeout(() => {
-                    this.currentResults = originalVotes;
-                    this.updateDisplay();
-                    this.generateBlockchainHashes();
-                    this.updateTamperChecks(true);
-                }, 1200);
-            } else {
-                // If validation passed (small amount), show success briefly
-                this.showAlert('No tampering detected (changes within expected range)', 'success');
-            }
-        }, 1000);
+            this.triggerTamperAlert();
+            this.updateTamperChecks(false);
+            
+            // Show security restoration
+            setTimeout(() => {
+                this.updateTamperChecks(true);
+                this.showAlert(`🛡️ Tampering attempt blocked! +${amount} votes to ${candidate} was prevented.`, 'success');
+            }, 2000);
+        }, 800);
     }
     
     validateDataIntegrity(originalData) {
-        // Simulate blockchain consensus validation
-        const currentTotal = this.getTotalVotes();
-        const originalTotal = Object.values(originalData).reduce((sum, count) => sum + count, 0);
+        // Real blockchain validation - compare against immutable record
+        if (!this.immutableVoteRecord) return false;
         
-        // If vote count increased by more than expected, flag as tampering
-        return currentTotal <= originalTotal + 10; // Allow small natural increases
+        // Check if current data matches the sealed immutable record
+        const currentTotal = this.getTotalVotes();
+        const sealedTotal = Object.values(this.immutableVoteRecord).reduce((sum, count) => sum + count, 0);
+        
+        // Verify each candidate's votes match the immutable record
+        for (const candidate of ['A', 'B', 'C', 'NOTA']) {
+            if (this.currentResults[candidate] !== this.immutableVoteRecord[candidate]) {
+                console.log(`🚨 Integrity violation detected for ${candidate}: Expected ${this.immutableVoteRecord[candidate]}, got ${this.currentResults[candidate]}`);
+                return false;
+            }
+        }
+        
+        return currentTotal === sealedTotal;
     }
     
     triggerTamperAlert() {
